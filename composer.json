@@ -14,6 +14,6 @@
         "ext-xml": "*"
     },
     "bin": [
-        "min-coverage"
+        "check-coverage"
     ]
 }

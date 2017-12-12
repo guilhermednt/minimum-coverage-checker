@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Simple code coverage checker.
+ *
+ * To run it use:
+ *
+ * php coverage.php <path to your clover.xml> <minimum code coverage percentage>
+ *
+ * If the coverage reported by your Clover-formatted report is equal or greater than the value specified,
+ * the exit code will be 0, or 1 otherwise.
+ */
+
+if ($argc < 2) {
+    echo "Missing path to Clover report.".PHP_EOL;
+    exit(1);
+}
+
+if ($argc < 3) {
+    echo "Missing minimum coverage.".PHP_EOL;
+    exit(1);
+}
+
+$file = $argv[1];
+$minCoverage = $argv[2];
+if (!file_exists($file)) {
+    die("File '{$file}' not found.");
+}
+
+try {
+    libxml_use_internal_errors(true);
+    $xml = new SimpleXMLElement(file_get_contents($file));
+    $metrics = $xml->project->metrics[0];
+} catch (\Exception $e) {
+    echo "There was a problem parsing your XML file. Make sure it's a valid Clover report.".PHP_EOL;
+    exit(1);
+}
+
+try {
+    $tpc = ($metrics['coveredelements'] + $metrics['coveredmethods']) / ($metrics['elements'] + $metrics['methods']);
+} catch (\DivisionByZeroError $e) {
+    $tpc = 0;
+}
+
+$hasMinimumCoverage = $tpc >= $minCoverage / 100;
+$prettyTpc = round($tpc * 100, 2);
+
+if ($hasMinimumCoverage) {
+    printf('SUCCESS: Coverage is %s.'.PHP_EOL, $prettyTpc);
+    exit(0);
+} else {
+    printf('ERROR: Coverage is %s. That is bellow the minimum %s%% required!'.PHP_EOL, $prettyTpc, $minCoverage);
+    exit(1);
+}

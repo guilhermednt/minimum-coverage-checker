@@ -1,0 +1,19 @@
+{
+    "name": "guilhermednt/minimum-coverage-checker",
+    "description": "Very simple script to check if code coverage percentage complies with a minimum value.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Guilherme Donato",
+            "email": "guilhermednt@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "php": "^5.4",
+        "ext-libxml": "*",
+        "ext-xml": "*"
+    },
+    "bin": [
+        "min-coverage"
+    ]
+}

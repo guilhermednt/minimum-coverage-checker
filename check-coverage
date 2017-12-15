@@ -24,7 +24,8 @@ if ($argc < 3) {
 $file = $argv[1];
 $minCoverage = $argv[2];
 if (!file_exists($file)) {
-    die("File '{$file}' not found.");
+    echo "File '{$file}' not found.".PHP_EOL;
+    exit(1);
 }
 
 try {
